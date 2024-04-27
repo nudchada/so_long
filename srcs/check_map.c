@@ -6,7 +6,7 @@
 /*   By: nusamank <nusamank@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:34:18 by nusamank          #+#    #+#             */
-/*   Updated: 2024/04/16 16:36:16 by nusamank         ###   ########.fr       */
+/*   Updated: 2024/04/19 10:43:40 by nusamank         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static void	check_cols(t_game *game)
 	int	cols;
 	int	i;
 
-	i = 0;
-	cols = ft_strlen(game->map[i]);
-	while (game->map[i])
+	cols = (int)ft_strlen(game->map[0]);
+	i = 1;
+	while (i < game->rows)
 	{
-		if ((ft_strlen(game->map[i])) != cols)
+		if ((int)(ft_strlen(game->map[i])) != cols)
 			handle_errors(game, "The map must be rectangular.\n");
 		i++;
 	}
@@ -40,7 +40,7 @@ static void	count_components(t_game *game, int y, int x)
 		game->player_x = x;
 		game->player_y = y;
 	}
-	else if (game->map[y][x] != '1' || game->map[y][x] != '0')
+	else if (!(game->map[y][x] == '1' || game->map[y][x] == '0'))
 		handle_errors(game, "The map be constructed with invalid component.\n");
 }
 
@@ -50,16 +50,16 @@ static void	check_components(t_game *game)
 	int	y;
 
 	y = 0;
-	while (i < game->rows)
+	while (y < game->rows)
 	{
 		x = 0;
-		while (j < game->cols)
+		while (x < game->cols)
 		{
 			if (y == 0 || y == game->rows -1 || x == 0 || x == game->cols -1)
 			{
 				if (game->map[y][x] != '1')
-					handle_errors(game, "The map must be surrounded by walls.\n");
-			}	
+					handle_errors(game, "Map must be surrounded by walls.\n");
+			}
 			else
 				count_components(game, y, x);
 			x++;

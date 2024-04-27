@@ -6,7 +6,7 @@
 /*   By: nusamank <nusamank@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 12:36:22 by nusamank          #+#    #+#             */
-/*   Updated: 2024/04/16 16:40:39 by nusamank         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:56:12 by nusamank         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,16 @@ static void	count_rows(t_game *game, char *map_file)
 		game->rows++;
 		free(map_line);
 	}
-	close(map_fd)
+	close(map_fd);
 	if (!game->rows)
 		handle_errors(game, "Unable to read map file.\n");
 }
 
-static void	add_map_line(t_game *game, char *line)
+static void	add_map_line(t_game *game, char *map_file)
 {
 	int		i;
+	int		map_fd;
+	char	*map_line;
 
 	map_fd = open(map_file, O_RDONLY);
 	if (map_fd < 0)
@@ -54,9 +56,23 @@ static void	add_map_line(t_game *game, char *line)
 	close(map_fd);
 }
 
+// void	print_array(char **array)
+// {
+// 	int	i;
+
+// 	if (!array)
+// 		return ;
+// 	i = 0;
+// 	while (array[i])
+// 	{
+// 		ft_printf("%s\n", array[i]);
+// 		i++;
+// 	}
+// }
+
 void	init_map(t_game *game, char *map_file)
 {
-	if (!ft_strncmp(map_file[ft_strlen(map_file) - 4], ".ber", 4))
+	if (ft_strncmp(&map_file[ft_strlen(map_file) - 4], ".ber", 4))
 		handle_errors(game, "Map file does not end with .ber extension.\n");
 	count_rows(game, map_file);
 	game->map = (char **)malloc(sizeof(char *) * (game->rows + 1));
@@ -68,15 +84,22 @@ void	init_map(t_game *game, char *map_file)
 	check_valid_map(game);
 }
 
-/**/
-void	print_array(char **array)
+void	render_map(t_game *game)
 {
-	int	i;
+	int	x;
+	int	y;
 
-	i = 0;
-	while (array[i])
+	load_png(game);
+	texture_to_image(game);
+	y = 0;
+	while (y < game->rows)
 	{
-		ft_printf("%s\n", array[i])
-		i++;
+		x = 0;
+		while (x < game->cols)
+		{
+			put_images(game, y, x);
+			x++;
+		}
+		y++;
 	}
 }
